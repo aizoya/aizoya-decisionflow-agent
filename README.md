@@ -37,7 +37,8 @@ DecisionFlow never infers approval from silence. Financial, contractual, legal, 
 - `record_evidence` Strands tool
 - deterministic `AUTO_EXECUTE | HUMAN_REVIEW | BLOCK` policy
 - unit tests for routine, purchase, contract, and bypass scenarios
-- AWS live validator that performs **no model inference**
+- no-inference AWS/Bedrock control-plane validator
+- controlled single-turn Strands/Bedrock inference validator
 
 ## Local setup
 
@@ -49,27 +50,26 @@ export AWS_REGION=us-east-2
 # Optional: override the default Bedrock model
 export BEDROCK_MODEL_ID=global.anthropic.claude-sonnet-4-6
 pytest
+python src/decisionflow_agent.py "Summarize today's routine project updates"
 ```
 
 AWS credentials should be provided through the normal AWS credential chain. Do not commit credentials or secrets.
 
-## AWS CloudShell validation
+## Validation
 
-From the repository root:
+No-inference validation:
 
 ```bash
 python -m scripts.live_validation --region us-east-2
 ```
 
-This validates:
+Controlled one-turn Strands + Bedrock validation (run only after explicit authorization to incur the model inference):
 
-1. AWS identity/credential resolution.
-2. Bedrock control-plane visibility in the selected region.
-3. Deterministic DecisionFlow policy outcomes.
+```bash
+python -m scripts.one_inference_validation --region us-east-2
+```
 
-The validator intentionally does **not** invoke a foundation model and reports `model_invocation_performed: false`, so validation is separated from any inference-cost decision.
-
-A real Bedrock inference should only be run after reviewing the validator output and confirming the intended model/region.
+The controlled inference validator intentionally attaches no tools so the validation remains one model turn and cannot enter an agent tool loop.
 
 ## Evaluation scenarios
 
@@ -84,7 +84,7 @@ A real Bedrock inference should only be run after reviewing the validator output
 
 ## Cost-control posture
 
-The prototype is intentionally lightweight. No infrastructure is provisioned by this repository. Bedrock inference occurs only when the agent is explicitly invoked. AWS billing and promotional-credit usage should be monitored separately.
+The prototype is intentionally lightweight. No infrastructure is provisioned by this repository. Bedrock inference occurs only when explicitly invoked. AWS billing and promotional-credit usage should be monitored separately.
 
 ## Status
 
