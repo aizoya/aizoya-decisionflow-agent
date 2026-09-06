@@ -10,17 +10,20 @@
 - [x] Evidence-recording tool implemented.
 - [x] No-inference AWS/Bedrock validator implemented.
 - [x] Controlled single-turn inference validator implemented.
+- [x] Whole-word / phrase policy matching added to reduce substring false positives.
 
 ## Evaluation
 
-- [x] Baseline deterministic unit tests pass (4/4 observed in CloudShell).
-- [x] Expanded authority matrix committed.
-- [ ] Rerun expanded suite and record final pass count.
+- [x] Baseline deterministic unit tests passed (4/4 observed in CloudShell).
+- [x] Expanded authority matrix passed (18/18 observed in CloudShell).
+- [x] Block-over-review precedence test implemented.
+- [x] Policy-boundary regression tests added.
+- [ ] Rerun latest suite after policy-boundary hardening and record final pass count.
 - [x] AWS identity validation passed.
 - [x] Bedrock control-plane validation passed.
 - [x] Quota-throttle behavior captured without automatic retry.
 - [ ] One successful Bedrock model response captured.
-- [ ] End-to-end agent flow demonstrated with evidence.
+- [ ] End-to-end agent flow demonstrated with successful model evidence.
 
 ## Cost and safety
 
@@ -33,8 +36,8 @@
 
 ## Submission assets
 
-- [ ] Final public README reviewed for judges.
-- [ ] Architecture diagram finalized.
+- [x] Judge-facing README substantially prepared.
+- [x] Architecture document created.
 - [x] Demo scenario selected.
 - [x] Core demo script drafted.
 - [ ] Demo video recorded and checked against time limit.
