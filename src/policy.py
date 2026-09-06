@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from enum import Enum
 
@@ -39,15 +40,22 @@ BLOCK_TERMS = {
 }
 
 
+def _contains_term(normalized: str, term: str) -> bool:
+    """Match whole words/phrases instead of arbitrary substrings."""
+    escaped = re.escape(term).replace(r"\ ", r"\s+")
+    return re.search(rf"(?<!\w){escaped}(?!\w)", normalized) is not None
+
+
 def assess_action(action: str) -> ActionAssessment:
     """Deterministically classify an action before any agentic execution.
 
     This module intentionally has no Strands or Bedrock dependency so policy
     checks can run in a minimal AWS CloudShell environment before SDK install.
+    Non-bypassable BLOCK rules are evaluated before HUMAN_REVIEW rules.
     """
     normalized = " ".join(action.lower().split())
 
-    if any(term in normalized for term in BLOCK_TERMS):
+    if any(_contains_term(normalized, term) for term in BLOCK_TERMS):
         return ActionAssessment(
             action=action,
             decision=Decision.BLOCK,
@@ -55,7 +63,7 @@ def assess_action(action: str) -> ActionAssessment:
             risk_score=100,
         )
 
-    if any(term in normalized for term in HUMAN_GATE_TERMS):
+    if any(_contains_term(normalized, term) for term in HUMAN_GATE_TERMS):
         return ActionAssessment(
             action=action,
             decision=Decision.HUMAN_REVIEW,
