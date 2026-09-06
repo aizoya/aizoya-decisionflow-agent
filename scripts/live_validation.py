@@ -14,19 +14,21 @@ SRC_DIR = REPO_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from decisionflow_agent import assess_action  # noqa: E402
+from policy import assess_action  # noqa: E402
 
 
 def validate(region: str) -> int:
     """Run credential, Bedrock control-plane, and deterministic-policy checks.
 
-    This validator intentionally does NOT invoke a foundation model, so it does
-    not perform inference or intentionally consume Bedrock model credits.
+    This validator intentionally does NOT import Strands or invoke a foundation
+    model. It can therefore run in a minimal AWS CloudShell environment before
+    installing the hackathon application's Python dependencies.
     """
     report: dict[str, object] = {
         "region": region,
         "checks": {},
         "model_invocation_performed": False,
+        "strands_required_for_this_validation": False,
     }
 
     try:
