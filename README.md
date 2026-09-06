@@ -39,6 +39,7 @@ DecisionFlow never infers approval from silence. Financial, contractual, legal, 
 - expanded deterministic authority evaluation matrix
 - boundary-safe whole-word / phrase policy matching
 - no-inference AWS/Bedrock control-plane validator
+- no-inference deterministic demo runner
 - controlled single-turn Strands/Bedrock inference validator
 - structured throttle handling with no automatic fallback or retry
 
@@ -59,11 +60,19 @@ AWS credentials should be provided through the normal AWS credential chain. Do n
 
 ## Validation
 
-No-inference validation:
+No-inference AWS/control-plane validation:
 
 ```bash
 python -m scripts.live_validation --region us-east-2
 ```
+
+No-inference deterministic product demo:
+
+```bash
+python -m scripts.policy_demo
+```
+
+This prints structured JSON for the three core judge scenarios—routine work, a consequential purchase, and a governance-bypass request—without invoking Bedrock.
 
 Controlled one-turn Strands + Bedrock validation (run only after explicit authorization to incur the model inference):
 
@@ -92,7 +101,7 @@ The controlled inference validator intentionally attaches no tools so the valida
 - [Demo script](docs/DEMO_SCRIPT.md)
 - [Submission readiness checklist](docs/SUBMISSION_CHECKLIST.md)
 
-Observed validation includes successful AWS identity and Bedrock control-plane access, dependency installation, and an expanded **18/18** test-suite pass before the latest policy-boundary hardening. A final local test rerun is required after that hardening change. The first authorized model invocation reached Bedrock `ConverseStream` but was rejected by a daily token quota, so a successful model response is **not** claimed yet.
+Observed validation includes successful AWS identity and Bedrock control-plane access, dependency installation, and the latest hardened deterministic suite at **21/21 tests passing in 0.42s** in AWS CloudShell. The first authorized model invocation reached Bedrock `ConverseStream` but was rejected by a daily token quota, so a successful model response is **not** claimed yet.
 
 ## Cost-control posture
 
