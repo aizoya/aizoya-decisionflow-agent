@@ -11,17 +11,19 @@
 - [x] No-inference AWS/Bedrock validator implemented.
 - [x] Controlled single-turn inference validator implemented.
 - [x] Whole-word / phrase policy matching added to reduce substring false positives.
+- [x] No-inference deterministic demo runner implemented.
 
 ## Evaluation
 
 - [x] Baseline deterministic unit tests passed (4/4 observed in CloudShell).
 - [x] Expanded authority matrix passed (18/18 observed in CloudShell).
+- [x] Latest hardened deterministic suite passed (21/21 in 0.42s observed in CloudShell).
 - [x] Block-over-review precedence test implemented.
-- [x] Policy-boundary regression tests added.
-- [ ] Rerun latest suite after policy-boundary hardening and record final pass count.
+- [x] Policy-boundary regression tests passed.
 - [x] AWS identity validation passed.
 - [x] Bedrock control-plane validation passed.
 - [x] Quota-throttle behavior captured without automatic retry.
+- [ ] Capture no-inference policy demo output.
 - [ ] One successful Bedrock model response captured.
 - [ ] End-to-end agent flow demonstrated with successful model evidence.
 
