@@ -37,6 +37,7 @@ DecisionFlow never infers approval from silence. Financial, contractual, legal, 
 - `record_evidence` Strands tool
 - deterministic `AUTO_EXECUTE | HUMAN_REVIEW | BLOCK` policy
 - unit tests for routine, purchase, contract, and bypass scenarios
+- AWS live validator that performs **no model inference**
 
 ## Local setup
 
@@ -48,10 +49,27 @@ export AWS_REGION=us-east-2
 # Optional: override the default Bedrock model
 export BEDROCK_MODEL_ID=global.anthropic.claude-sonnet-4-6
 pytest
-python src/decisionflow_agent.py "Summarize today's routine project updates"
 ```
 
 AWS credentials should be provided through the normal AWS credential chain. Do not commit credentials or secrets.
+
+## AWS CloudShell validation
+
+From the repository root:
+
+```bash
+python -m scripts.live_validation --region us-east-2
+```
+
+This validates:
+
+1. AWS identity/credential resolution.
+2. Bedrock control-plane visibility in the selected region.
+3. Deterministic DecisionFlow policy outcomes.
+
+The validator intentionally does **not** invoke a foundation model and reports `model_invocation_performed: false`, so validation is separated from any inference-cost decision.
+
+A real Bedrock inference should only be run after reviewing the validator output and confirming the intended model/region.
 
 ## Evaluation scenarios
 
