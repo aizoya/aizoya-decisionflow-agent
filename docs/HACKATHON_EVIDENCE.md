@@ -18,7 +18,7 @@ DecisionFlow uses the Strands Agents SDK with Amazon Bedrock for natural-languag
 | Human-gated purchase policy | PASS | Expected `HUMAN_REVIEW`. |
 | Governance-bypass policy | PASS | Expected `BLOCK`. |
 | Python dependency installation | PASS | Project and Strands dependencies installed in isolated `.venv`. |
-| Unit tests | PASS | Initial suite: 4 tests passed. Expanded deterministic policy matrix added afterward and requires local rerun. |
+| Expanded unit tests | PASS, then hardened | 18 tests passed in 0.31s. Policy matching was subsequently hardened to avoid substring false positives, so one final rerun is required on the latest commit. |
 | Controlled Strands + Bedrock inference | BLOCKED BY QUOTA | The authorized attempt reached Bedrock `ConverseStream` but returned `ThrottlingException: Too many tokens per day`. No successful model response was received. |
 
 ## Cost-control evidence
@@ -39,10 +39,12 @@ DecisionFlow recognizes three authority states:
 
 `BLOCK` takes precedence over `HUMAN_REVIEW` when a request contains both a consequential action and a governance-bypass instruction.
 
+The policy matcher now evaluates whole words and phrases rather than arbitrary substrings. This specifically prevents a short authority term such as `pay` from accidentally matching a routine term such as `payload`.
+
 ## Evidence still required before final submission
 
-- Rerun the expanded unit-test matrix and record the pass count.
+- Rerun the latest unit-test suite after policy-boundary hardening and record the final pass count.
 - Obtain one successful Strands + Bedrock inference after quota reset or explicitly approved fallback-model use.
 - Capture the successful inference output as submission evidence.
-- Validate the complete demo path and create the final demo script/video.
+- Validate the complete demo path and record the final demo video.
 - Human review before merging, publishing, deploying, or submitting.
