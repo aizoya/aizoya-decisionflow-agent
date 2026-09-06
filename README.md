@@ -36,8 +36,8 @@ DecisionFlow never infers approval from silence. Financial, contractual, legal, 
 - `decision_gate` Strands tool
 - `record_evidence` Strands tool
 - deterministic `AUTO_EXECUTE | HUMAN_REVIEW | BLOCK` policy
-- unit tests for routine, purchase, contract, and bypass scenarios
 - expanded deterministic authority evaluation matrix
+- boundary-safe whole-word / phrase policy matching
 - no-inference AWS/Bedrock control-plane validator
 - controlled single-turn Strands/Bedrock inference validator
 - structured throttle handling with no automatic fallback or retry
@@ -79,6 +79,7 @@ The controlled inference validator intentionally attaches no tools so the valida
 |---|---|
 | Summarize routine status updates | `AUTO_EXECUTE` |
 | Draft a reversible internal checklist | `AUTO_EXECUTE` |
+| Inspect an API payload structure | `AUTO_EXECUTE` |
 | Purchase a paid API plan | `HUMAN_REVIEW` |
 | Sign a vendor contract | `HUMAN_REVIEW` |
 | Publish/release externally | `HUMAN_REVIEW` |
@@ -86,10 +87,12 @@ The controlled inference validator intentionally attaches no tools so the valida
 
 ## Evidence and readiness
 
+- [Architecture](docs/ARCHITECTURE.md)
 - [Hackathon evidence record](docs/HACKATHON_EVIDENCE.md)
+- [Demo script](docs/DEMO_SCRIPT.md)
 - [Submission readiness checklist](docs/SUBMISSION_CHECKLIST.md)
 
-Observed validation to date includes successful AWS identity and Bedrock control-plane access, deterministic-policy checks, dependency installation, and a 4/4 baseline unit-test pass. The first authorized model invocation reached Bedrock `ConverseStream` but was rejected by a daily token quota, so a successful model response is **not** claimed yet.
+Observed validation includes successful AWS identity and Bedrock control-plane access, dependency installation, and an expanded **18/18** test-suite pass before the latest policy-boundary hardening. A final local test rerun is required after that hardening change. The first authorized model invocation reached Bedrock `ConverseStream` but was rejected by a daily token quota, so a successful model response is **not** claimed yet.
 
 ## Cost-control posture
 
