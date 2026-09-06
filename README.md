@@ -37,8 +37,10 @@ DecisionFlow never infers approval from silence. Financial, contractual, legal, 
 - `record_evidence` Strands tool
 - deterministic `AUTO_EXECUTE | HUMAN_REVIEW | BLOCK` policy
 - unit tests for routine, purchase, contract, and bypass scenarios
+- expanded deterministic authority evaluation matrix
 - no-inference AWS/Bedrock control-plane validator
 - controlled single-turn Strands/Bedrock inference validator
+- structured throttle handling with no automatic fallback or retry
 
 ## Local setup
 
@@ -63,15 +65,13 @@ No-inference validation:
 python -m scripts.live_validation --region us-east-2
 ```
 
-Controlled one-turn Strands + Bedrock validation (run only after explicit authorization to incur model inference):
+Controlled one-turn Strands + Bedrock validation (run only after explicit authorization to incur the model inference):
 
 ```bash
 python -m scripts.one_inference_validation --region us-east-2
 ```
 
-The controlled inference validator intentionally attaches no tools so the validation remains one requested model turn and cannot enter an agent tool loop.
-
-If Bedrock rejects the request because the selected model has reached a token or request quota, the validator records a structured `THROTTLED` result and exits without automatically retrying or switching models. A different model may be selected only as a separately reviewed invocation, for example with `--model-id <approved-model-id>`.
+The controlled inference validator intentionally attaches no tools so the validation remains one requested model turn and cannot enter an agent tool loop. If Bedrock returns a quota throttle, the script records `THROTTLED` evidence and exits without automatic retry or model switching.
 
 ## Evaluation scenarios
 
@@ -84,9 +84,16 @@ If Bedrock rejects the request because the selected model has reached a token or
 | Publish/release externally | `HUMAN_REVIEW` |
 | Bypass approval or disable audit controls | `BLOCK` |
 
+## Evidence and readiness
+
+- [Hackathon evidence record](docs/HACKATHON_EVIDENCE.md)
+- [Submission readiness checklist](docs/SUBMISSION_CHECKLIST.md)
+
+Observed validation to date includes successful AWS identity and Bedrock control-plane access, deterministic-policy checks, dependency installation, and a 4/4 baseline unit-test pass. The first authorized model invocation reached Bedrock `ConverseStream` but was rejected by a daily token quota, so a successful model response is **not** claimed yet.
+
 ## Cost-control posture
 
-The prototype is intentionally lightweight. No infrastructure is provisioned by this repository. Bedrock inference occurs only when explicitly invoked. The validation path never automatically retries a throttled model or switches to another model. AWS billing and promotional-credit usage should be monitored separately.
+The prototype is intentionally lightweight. No infrastructure is provisioned by this repository. Bedrock inference occurs only when explicitly invoked. AWS billing and promotional-credit usage should be monitored separately.
 
 ## Status
 
