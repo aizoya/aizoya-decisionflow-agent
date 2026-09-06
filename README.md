@@ -63,13 +63,15 @@ No-inference validation:
 python -m scripts.live_validation --region us-east-2
 ```
 
-Controlled one-turn Strands + Bedrock validation (run only after explicit authorization to incur the model inference):
+Controlled one-turn Strands + Bedrock validation (run only after explicit authorization to incur model inference):
 
 ```bash
 python -m scripts.one_inference_validation --region us-east-2
 ```
 
-The controlled inference validator intentionally attaches no tools so the validation remains one model turn and cannot enter an agent tool loop.
+The controlled inference validator intentionally attaches no tools so the validation remains one requested model turn and cannot enter an agent tool loop.
+
+If Bedrock rejects the request because the selected model has reached a token or request quota, the validator records a structured `THROTTLED` result and exits without automatically retrying or switching models. A different model may be selected only as a separately reviewed invocation, for example with `--model-id <approved-model-id>`.
 
 ## Evaluation scenarios
 
@@ -84,7 +86,7 @@ The controlled inference validator intentionally attaches no tools so the valida
 
 ## Cost-control posture
 
-The prototype is intentionally lightweight. No infrastructure is provisioned by this repository. Bedrock inference occurs only when explicitly invoked. AWS billing and promotional-credit usage should be monitored separately.
+The prototype is intentionally lightweight. No infrastructure is provisioned by this repository. Bedrock inference occurs only when explicitly invoked. The validation path never automatically retries a throttled model or switches to another model. AWS billing and promotional-credit usage should be monitored separately.
 
 ## Status
 
