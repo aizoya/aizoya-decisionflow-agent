@@ -35,8 +35,8 @@
 
 - [ ] Final public README reviewed for judges.
 - [ ] Architecture diagram finalized.
-- [ ] Demo scenario selected.
-- [ ] Demo script finalized.
+- [x] Demo scenario selected.
+- [x] Core demo script drafted.
 - [ ] Demo video recorded and checked against time limit.
 - [ ] Public repository reviewed for proprietary/sensitive material.
 - [ ] Submission form completed.
